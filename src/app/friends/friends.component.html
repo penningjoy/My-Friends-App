@@ -1,0 +1,29 @@
+<h2> My Friends </h2>
+
+<!-- Add a Friend -->
+<div>
+    <label> Friend Name :
+        <input #heroName/>
+    </label>
+    <!-- (click) passes input value to add() and then clears the input -->
+    <button (click)= "add(heroName.value); heroName.value=''"> 
+        add 
+    </button>
+</div>
+
+<ul class="friends">
+    <li *ngFor="let friend of friends"
+        [class.selected]="friend === selectedFriend"
+        (click)="onSelect(friend)">
+        <a routerLink="/detail/{{friend.id}}">
+           <span class="badge">{{friend.id}}</span> {{friend.name}}
+        </a>
+        <button class= "delete" title="delete friend" (click)="delete(friend)"> x </button>
+    </li>
+</ul>
+
+
+<!-- SelectedFriend gets passed on to -->
+<!--<app-friend-detail [friend]= "selectedFriend"></app-friend-detail> --> 
+<!-- We will keep the friend details separate now-->
+
