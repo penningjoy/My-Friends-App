@@ -10,7 +10,7 @@ import { Friend } from './Friend';
 import { FRIENDS } from './mock-friends';
 import { MessagesService } from './messages.service';
 
-/* Injected at the root level. -> Angular will create a single, shared instance of HeroService .
+/* Injected at the root level. -> Angular will create a single, shared instance of friendService .
  * If it is not used at all, angular will remove it to optimize the app. */
 @Injectable({
   providedIn: 'root'
@@ -28,16 +28,14 @@ export class FriendService {
   /* This method returns the array of friends */
   getFriends(): Observable<Friend[]> {
      this.messageservice.addmessage('Friends Service Reporting : Friends fetched!');
-     /*
-     this.http.get<Friend[]>(this.friendUrl).subscribe(friend => this.friends.push(...friend));
-     return of(this.friends); */
+
      return this.http.get<Friend[]>(this.friendUrl)
             .pipe(
                // RxJS tap() operator, which looks at the observable values, does something with those values, and passes them along
                tap(_ => this.log('fetched friends')),
                catchError(this.handleError<Friend[]>('getFriends', []))
             );
-     // return of(FRIENDS); // We will use the httpClient to the friends from the server now.
+
   }
 
   /* This method returns the friend based on the Id */
@@ -130,10 +128,10 @@ export class FriendService {
 
 /*            -- Notes --
   -------  Angular Services --------
-We must make the HeroService available to the dependency injection system before
+We must make the friendService available to the dependency injection system before
 Angular can inject it into the FriendsComponent by registering a provider.
 A provider is something that can create or deliver a service; in this case,
-it instantiates the HeroService class to provide the service.
+it instantiates the friendService class to provide the service.
 The service is registered with the INJECTOR and this object is responsible for choosing and
 providing the service when the app requires it.
 */

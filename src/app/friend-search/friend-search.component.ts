@@ -38,6 +38,6 @@ export class FriendSearchComponent implements OnInit {
 * Even with a 300ms pause between requests, you could have multiple HTTP requests in flight and they may not return in the order sent.
 * switchMap() preserves the original request order while returning only the observable from the most recent HTTP method call.
 * Results from prior calls are canceled and discarded.
-* Note that canceling a previous searchHeroes() Observable doesn't actually abort a pending HTTP request.
+* Note that canceling a previous searchFriends() Observable doesn't actually abort a pending HTTP request.
 * Unwanted results are simply discarded before they reach your application code.
 */

@@ -59,6 +59,6 @@ export class FriendsComponent implements OnInit {
 /*    ---- Notes ----
    Use of Observable will make the component wait for the array of friends to be
    emitted by the getFriends method from the friends service. The subscribe method
-   passes the emitted array of heroes to the callback, which sets the component's
-   heroes property.
+   passes the emitted array of friends to the callback, which sets the component's
+   friends property.
 */
