@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Friend } from './Friend';
@@ -71,7 +71,7 @@ export class FriendService {
  /* This method deletes a friend */
  deleteFriend(friend: Friend | number): Observable<Friend> {
    const id  = typeof friend === 'number' ? friend : friend.id;
-   const name = typeof friend === 'number' ? this.getFriend(friend) : friend.name;
+   const name = typeof friend === 'number' ? 'id:' + friend : friend.name;
    const url = `${this.friendUrl}/${id}`;
 
    return this.http.delete<Friend>(url, this.httpOptions).pipe(
@@ -85,13 +85,14 @@ export class FriendService {
   *  the number of similar HTTP requests and consume network bandwidth economically.
  */
  searchFriends(term: string): Observable<Friend[]> {
-   const url = `${this.friendUrl}/?name=${term}`;
    if (!term.trim()) {
      // if no search term, return empty friends array.
      return of([]);
    }
 
-   return this.http.get<Friend[]>(url)
+   const options = { params: new HttpParams().set('name', term) };
+
+   return this.http.get<Friend[]>(this.friendUrl, options)
    .pipe(
       tap(frnd => frnd.length ?
            this.log(`Found friends matching "${term}"`) :
