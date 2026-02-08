@@ -9,6 +9,12 @@ This application implements the following security measures:
 - Restricts resource loading to trusted sources
 - Helps prevent XSS attacks
 
+**Note on CSP Configuration:**
+The current CSP includes `'unsafe-inline'` and `'unsafe-eval'` in script-src, which are required for Angular 8 to function. While this weakens XSS protection, it's a necessary trade-off for this legacy Angular version. When upgrading to a modern Angular version (12+), these directives can be removed in favor of:
+- Using nonces or hashes for inline scripts
+- Refactoring to eliminate the need for eval()
+- Implementing stricter CSP policies
+
 ### 2. Security Headers
 The following HTTP security headers are configured in the Nginx configuration:
 - `X-Frame-Options: DENY` - Prevents clickjacking attacks
@@ -38,8 +44,9 @@ The following HTTP security headers are configured in the Nginx configuration:
 
 ### Angular Version
 This application uses Angular 8.2.4, which has reached end-of-life. For production use:
-- Consider upgrading to Angular 12+ or later
+- Consider upgrading to the latest supported Angular version (Angular 17+ as of 2026)
 - Regular security updates are no longer provided for Angular 8
+- See the [Angular Update Guide](https://update.angular.io/) for migration steps
 
 ### Dependencies
 - Some npm packages have known vulnerabilities

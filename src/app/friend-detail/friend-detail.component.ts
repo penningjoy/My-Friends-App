@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { Friend } from '../Friend';
 import { FriendService } from '../friend.service';
+import { InputValidationService } from '../input-validation.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class FriendDetailComponent implements OnInit {
   constructor(
               private route: ActivatedRoute,
               private friendService: FriendService,
-              private location: Location
+              private location: Location,
+              private validationService: InputValidationService
              ) { }
 
   ngOnInit() {
@@ -38,23 +40,13 @@ export class FriendDetailComponent implements OnInit {
       return;
     }
 
-    const name = this.friend.name.trim();
-
-    // Security: Validate input length to prevent DoS attacks
-    if (name.length > 100) {
-      console.warn('Friend name exceeds maximum length of 100 characters');
+    const validatedName = this.validationService.getValidatedName(this.friend.name);
+    if (!validatedName) {
+      // Validation error already logged by the service
       return;
     }
 
-    // Security: Sanitize input - remove potentially harmful characters
-    const sanitizedName = name.replace(/[^a-zA-Z0-9\s\-']/g, '');
-
-    if (!sanitizedName) {
-      console.warn('Friend name contains invalid characters');
-      return;
-    }
-
-    this.friend.name = sanitizedName;
+    this.friend.name = validatedName;
     this.friendService.updateFriend(this.friend).subscribe(() => this.goback());
   }
 

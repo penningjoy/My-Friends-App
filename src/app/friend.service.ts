@@ -111,10 +111,8 @@ export class FriendService {
     return (error: any): Observable<T> => {
       // Security: Don't expose detailed error information in production
       // Log only generic error messages for security
-      if (typeof console !== 'undefined' && console.error) {
-        // In production, this should be sent to a secure logging service
-        console.error(`${operation} failed`);
-      }
+      // In production, this should be sent to a secure logging service
+      console.error(`${operation} failed`);
 
       // Log user-friendly message via MessageService
       this.log(`${operation} failed. Please try again.`);
