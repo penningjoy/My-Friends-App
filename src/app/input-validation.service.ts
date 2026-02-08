@@ -49,9 +49,6 @@ export class InputValidationService {
   getValidatedName(name: string): string | null {
     const validation = this.validateFriendName(name);
     if (!validation.isValid) {
-      if (validation.error) {
-        console.warn(validation.error);
-      }
       return null;
     }
     return name.trim();

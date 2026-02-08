@@ -40,11 +40,15 @@ export class FriendsComponent implements OnInit {
   }
   add(name: string): void {
     // Security: Validate and sanitize input
-    const validatedName = this.validationService.getValidatedName(name);
-    if (!validatedName) {
-      // Validation error already logged by the service
+    const validation = this.validationService.validateFriendName(name);
+    if (!validation.isValid) {
+      if (validation.error) {
+        this.messasgesservice.addmessage(`Error: ${validation.error}`);
+      }
       return;
     }
+
+    const validatedName = name.trim();
 
     // When the given name is valid, create a Friend-like object from the name
     // (it's only missing the id) and pass it to the services addFriend() method.

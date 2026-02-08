@@ -40,13 +40,15 @@ export class FriendDetailComponent implements OnInit {
       return;
     }
 
-    const validatedName = this.validationService.getValidatedName(this.friend.name);
-    if (!validatedName) {
-      // Validation error already logged by the service
+    const validation = this.validationService.validateFriendName(this.friend.name);
+    if (!validation.isValid) {
+      if (validation.error) {
+        console.warn(validation.error);
+      }
       return;
     }
 
-    this.friend.name = validatedName;
+    this.friend.name = this.friend.name.trim();
     this.friendService.updateFriend(this.friend).subscribe(() => this.goback());
   }
 
