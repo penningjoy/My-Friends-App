@@ -109,11 +109,17 @@ export class FriendService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console for now.
+      // Security: Don't expose detailed error information in production
+      // Log only generic error messages for security
+      if (typeof console !== 'undefined' && console.error) {
+        // In production, this should be sent to a secure logging service
+        console.error(`${operation} failed`);
+      }
 
-      this.log(`${operation} failed: ${error.message}`);
-     // Let the app keep running by returning an empty result.
+      // Log user-friendly message via MessageService
+      this.log(`${operation} failed. Please try again.`);
+      
+      // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }

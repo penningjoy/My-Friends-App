@@ -37,9 +37,25 @@ export class FriendsComponent implements OnInit {
   add(name: string): void {
     name = name.trim();
     if (!name) { return; }
+    
+    // Security: Validate input length to prevent DoS attacks
+    if (name.length > 100) {
+      console.warn('Friend name exceeds maximum length of 100 characters');
+      return;
+    }
+    
+    // Security: Sanitize input - remove potentially harmful characters
+    // Allow only alphanumeric characters, spaces, hyphens, and apostrophes
+    const sanitizedName = name.replace(/[^a-zA-Z0-9\s\-']/g, '');
+    
+    if (!sanitizedName) {
+      console.warn('Friend name contains invalid characters');
+      return;
+    }
+    
     // When the given name is non-blank, the handler creates a Friend-like object from the name
     // (it's only missing the id) and passes it to the services addFriend() method.
-    this.friendservice.addFriend({ name } as Friend).subscribe(friend => this.friends.push(friend));
+    this.friendservice.addFriend({ name: sanitizedName } as Friend).subscribe(friend => this.friends.push(friend));
   }
 
   delete(friend: Friend): void {
