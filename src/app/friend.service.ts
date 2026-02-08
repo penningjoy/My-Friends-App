@@ -118,7 +118,7 @@ export class FriendService {
 
       // Log user-friendly message via MessageService
       this.log(`${operation} failed. Please try again.`);
-      
+
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
