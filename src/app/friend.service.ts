@@ -1,6 +1,3 @@
-/* Components should not fetch data. They should be more concerned with displaying the data
- * and the presentation. Data fetching should be left to a Service.  */
-
 import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -9,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Friend } from './Friend';
 import { FRIENDS } from './mock-friends';
 import { MessagesService } from './messages.service';
+import { environment } from '../environments/environment';
 
 /* Injected at the root level. -> Angular will create a single, shared instance of friendService .
  * If it is not used at all, angular will remove it to optimize the app. */
@@ -110,9 +108,10 @@ export class FriendService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       // Security: Don't expose detailed error information in production
-      // Log only generic error messages for security
-      // In production, this should be sent to a secure logging service
-      console.error(`${operation} failed`);
+      // Only log errors in development mode
+      if (!environment.production) {
+        console.error(`${operation} failed:`, error);
+      }
 
       // Log user-friendly message via MessageService
       this.log(`${operation} failed. Please try again.`);
