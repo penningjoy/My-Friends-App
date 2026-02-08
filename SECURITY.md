@@ -19,9 +19,10 @@ The current CSP includes `'unsafe-inline'` and `'unsafe-eval'` in script-src, wh
 The following HTTP security headers are configured in the Nginx configuration:
 - `X-Frame-Options: DENY` - Prevents clickjacking attacks
 - `X-Content-Type-Options: nosniff` - Prevents MIME type sniffing
-- `X-XSS-Protection: 1; mode=block` - Enables browser XSS protection
 - `Referrer-Policy: strict-origin-when-cross-origin` - Controls referrer information
 - `Content-Security-Policy` - See CSP section above
+
+**Note:** The deprecated `X-XSS-Protection` header is intentionally omitted as it can introduce security vulnerabilities in older browsers and is superseded by CSP.
 
 ### 3. Input Validation and Sanitization
 - All user inputs are validated and sanitized before processing
