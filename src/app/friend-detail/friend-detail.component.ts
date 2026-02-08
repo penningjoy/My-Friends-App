@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 
 import { Friend } from '../Friend';
 import { FriendService } from '../friend.service';
+import { InputValidationService } from '../input-validation.service';
+import { MessagesService } from '../messages.service';
 
 
 @Component({
@@ -18,7 +20,9 @@ export class FriendDetailComponent implements OnInit {
   constructor(
               private route: ActivatedRoute,
               private friendService: FriendService,
-              private location: Location
+              private location: Location,
+              private validationService: InputValidationService,
+              private messagesService: MessagesService
              ) { }
 
   ngOnInit() {
@@ -32,6 +36,21 @@ export class FriendDetailComponent implements OnInit {
 
   //  persists friend changes and callback function calls the goback() function
   save(): void {
+    // Security: Validate friend name before saving
+    if (!this.friend || !this.friend.name) {
+      this.messagesService.addmessage('Error: Cannot save friend without a name');
+      return;
+    }
+
+    const validation = this.validationService.validateFriendName(this.friend.name);
+    if (!validation.isValid) {
+      if (validation.error) {
+        this.messagesService.addmessage(`Error: ${validation.error}`);
+      }
+      return;
+    }
+
+    this.friend.name = this.friend.name.trim();
     this.friendService.updateFriend(this.friend).subscribe(() => this.goback());
   }
 

@@ -3,7 +3,7 @@
 <!-- Add a Friend -->
 <div>
     <label> Friend Name :
-        <input #heroName/>
+        <input #heroName maxlength="100"/>
     </label>
     <!-- (click) passes input value to add() and then clears the input -->
     <button (click)= "add(heroName.value); heroName.value=''"> 

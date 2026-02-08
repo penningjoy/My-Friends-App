@@ -1,10 +1,10 @@
-/* Importing component symbol from Angular core library */
 import { Component, OnInit } from '@angular/core';
 
 import { FRIENDS } from '../mock-friends';
 import { Friend } from '../Friend';
 import { FriendService } from '../friend.service';
 import { MessagesService } from '../messages.service';
+import { InputValidationService } from '../input-validation.service';
 
 /* Annotate the component class with @component.
  * @component is the decorator that specifies metadata for angular component.
@@ -21,7 +21,11 @@ import { MessagesService } from '../messages.service';
 export class FriendsComponent implements OnInit {
   friends: Friend[];
   selectedFriend: Friend;
-  constructor(private friendservice: FriendService, private messasgesservice: MessagesService) {}
+  constructor(
+    private friendservice: FriendService,
+    private messagesService: MessagesService,
+    private validationService: InputValidationService
+  ) {}
 
   /* ngOnInit is a lifecycle hook -> angular calls ngOnInit() shortly after creating a component.
    * Good Place to put initialization logic */
@@ -35,11 +39,20 @@ export class FriendsComponent implements OnInit {
 
   }
   add(name: string): void {
-    name = name.trim();
-    if (!name) { return; }
-    // When the given name is non-blank, the handler creates a Friend-like object from the name
-    // (it's only missing the id) and passes it to the services addFriend() method.
-    this.friendservice.addFriend({ name } as Friend).subscribe(friend => this.friends.push(friend));
+    // Security: Validate and sanitize input
+    const validation = this.validationService.validateFriendName(name);
+    if (!validation.isValid) {
+      if (validation.error) {
+        this.messagesService.addmessage(`Error: ${validation.error}`);
+      }
+      return;
+    }
+
+    const validatedName = name.trim();
+
+    // When the given name is valid, create a Friend-like object from the name
+    // (it's only missing the id) and pass it to the services addFriend() method.
+    this.friendservice.addFriend({ name: validatedName } as Friend).subscribe(friend => this.friends.push(friend));
   }
 
   delete(friend: Friend): void {
@@ -51,7 +64,7 @@ export class FriendsComponent implements OnInit {
   /*
   onSelect(friend: Friend): void {
      this.selectedFriend = friend;
-     this.messasgesservice.addmessage(`Selected friend id : ${friend.id}`);
+     this.messagesService.addmessage(`Selected friend id : ${friend.id}`);
   }
   */
 }
