@@ -23,7 +23,7 @@ export class FriendsComponent implements OnInit {
   selectedFriend: Friend;
   constructor(
     private friendservice: FriendService,
-    private messasgesservice: MessagesService,
+    private messagesService: MessagesService,
     private validationService: InputValidationService
   ) {}
 
@@ -43,7 +43,7 @@ export class FriendsComponent implements OnInit {
     const validation = this.validationService.validateFriendName(name);
     if (!validation.isValid) {
       if (validation.error) {
-        this.messasgesservice.addmessage(`Error: ${validation.error}`);
+        this.messagesService.addmessage(`Error: ${validation.error}`);
       }
       return;
     }
@@ -64,7 +64,7 @@ export class FriendsComponent implements OnInit {
   /*
   onSelect(friend: Friend): void {
      this.selectedFriend = friend;
-     this.messasgesservice.addmessage(`Selected friend id : ${friend.id}`);
+     this.messagesService.addmessage(`Selected friend id : ${friend.id}`);
   }
   */
 }
